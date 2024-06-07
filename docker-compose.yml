@@ -1,0 +1,28 @@
+# Hier verwende ich die Docker Compose Version 3.
+version: "3"
+
+# An dieser Stelle definiere ich zwei Docker-Services: den "provider" und den "consumer".
+services:
+  # Docker-Service für den JokeProvider in Go
+  provider:
+    # Hier wird der Service gebaut, verwende das Verzeichnis ./M347_LB02_JokeProviderGo als Kontext.
+    build:
+      context: ./M347_LB02_JokeProviderGo
+    # Hier wird der Port 3001 vom Host auf den Port 3001 im Container weitergeleitet.
+    ports:
+      - "3001:3001"
+
+  # Docker-Service für den JokeConsumer in Python
+  consumer:
+    # Hier wird der Service gebaut, verwende das Verzeichnis ./M347_LB02_JokeConsumerPython als Kontext.
+    build:
+      context: ./M347_LB02_JokeConsumerPython
+    # Hier wird der Port 5002 vom Host auf den Port 5002 im Container weitergeleitet.
+    ports:
+      - "5002:5002"
+    # Hier wird definiert, dass der "consumer" von einem anderen Service abhängig ist.
+    depends_on:
+      # Hier wird definiert, dass der "consumer" von dem "provider"-Service abhängt.
+      provider:
+        # Hier wird definiert, dass der "consumer" erst gestartet wird, wenn der "provider" gestartet ist.
+        condition: service_started
